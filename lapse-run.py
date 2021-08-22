@@ -1,4 +1,16 @@
 #!/usr/bin/python3
+
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>.
 """
 Call ffmpeg to generate video from instruction list
 Optionally add music
@@ -14,19 +26,6 @@ See ffmpeg documentation:
   https://ffmpeg.org/ffmpeg-filters.html#pad-1
   https://superuser.com/questions/991371/ffmpeg-scale-and-pad#991412
   https://superuser.com/questions/547296/resizing-videos-with-ffmpeg-avconv-to-fit-into-static-sized-player/1136305#1136305
-
-
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import argparse
 import os
@@ -72,7 +71,7 @@ def call_ffmpeg(list_file, output_name, safe=True, play=False, overwrite=False,
   try:
     process = subprocess.Popen(ffmpeg_cmd.split(), stdout=subprocess.PIPE)
     for c in iter(lambda: process.stdout.read(1), b''):
-        sys.stdout.write(str(c))
+      sys.stdout.write(str(c))
   except KeyboardInterrupt:
     process.terminate()
     sys.exit()
