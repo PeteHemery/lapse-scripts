@@ -91,7 +91,7 @@ def main():
                       help="Output file codec (default: %(default)s)")
   parser.add_argument("-w", "--width", default="1280", type=int,
                       help="Output scaled width in pixels (default: %(default)s)")
-  parser.add_argument("-x", "--aspectratio", default="1.333", type=float,
+  parser.add_argument("-x", "--aspectratio", default="1.777", type=float,
                       help="Output aspect ratio (width/height) (default: %(default)s)")
   parser.add_argument("-s", "--safe", dest="safe", action="store_false",
                       help="Ignore problems with relative paths and use -safe 0 flag (for encoding only)"
