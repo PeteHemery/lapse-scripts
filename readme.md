@@ -5,7 +5,7 @@ Three phases are required:
 
 * JSON group config generation
 * Audacity label parsing
-* FFmpeg running
+* Running ffmpeg or ffplay
 
 Running the JSON generator in a directory with images should result in a _config.json_ file
 containing groups based on directory name.
@@ -93,6 +93,12 @@ With the JSON config file and Audacity labels file, the parser script can determ
 the effects requested to the file lists and generate an output file that FFmpeg/FFplay can read to concatenate
 images together into a video.
 
+NOTE: The parser requires numpy.
+
+```bash
+$ pip install -r requirements.txt
+```
+
 Running the above example:
 
 ```bash
@@ -170,17 +176,13 @@ width 640 pixels, height 480 pixels, in H265 format.
 The height is calculated by the *width / aspect ratio*.
 
 ```bash
-$ python lapse-run.py -l list.txt -o example.mp4 -w 640 -x 1.333
-```
-NOTE: using bash subshell to do inline division:
-```bash
-$ python lapse-run.py -l list.txt -o example.mp4 -w 640 -x $(bc <<< 'scale=3; 4/3')
+$ python lapse-run.py -l list.txt -w 640 -x 4/3 -o test.mp4
 ```
 
 Changing the command slightly, we can preview the output before encoding it, and attach an audio file with it:
 
 ```bash
-$ python lapse-run.py -l list.txt -o example.mp4 -w 640 -x 1.333 -a audio.m4a -p
+$ python lapse-run.py -l list.txt -w 640 -x 4/3 -a test.m4a -p
 ```
 
 NOTE: If the video file already exists, previewing will fail without adding the -y flag,
