@@ -621,7 +621,8 @@ class LapseModifier():
           os.makedirs(modpath, exist_ok=True)
         cmd += ["-path", modpath]
         group["modpath"] = modpath
-      cmd += ["-{}".format(instruction)]
+      if instruction != "color":
+        cmd += ["-{}".format(instruction)]
       if any([x in instruction for x in ["resize", "scale", "crop"]]):
         if args.geometry is not None:
           sizeAmount = "{}".format(args.geometry)
@@ -638,9 +639,9 @@ class LapseModifier():
         if args.normalize:
           cmd += ["-normalize"]
         if args.autolevel:
-          cmd += ["-autolevel"]
+          cmd += ["-auto-level"]
         if args.autogamma:
-          cmd += ["-autogamma"]
+          cmd += ["-auto-gamma"]
       elif instruction == "rotate":
         if args.autoorient:
           cmd += ["-auto-orient"]
