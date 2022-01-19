@@ -430,8 +430,8 @@ class LapseParser():
     self.logger.info("calc_files: {}".format(calc_files))
     self.logger.info("total scaled_duration: {}\n".format(sum(tempos[t]["scaled_duration"] for t in tempos)))
     if calc_files != count:
-      raise RuntimeError("Calculated number of files {} does not match expected count {}."
-                         .format(calc_files, count))
+      raise RuntimeError("Calculated number of files {} does not match expected count {}. info: {}"
+                         .format(calc_files, count, tempos[list(tempos.keys())[0]]["marks"][0]["label_entry"]["label"]))
 
   def allocate_files_to_groups(self):
     """
