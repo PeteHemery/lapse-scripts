@@ -406,7 +406,7 @@ class LapseParser():
         if i == last_mark:
           if nfilestotal < files_ratio:
             diff = files_ratio - nfilestotal
-            j = skip_to_valid_list_of_files(tempos[t]["marks"])
+            j = self.skip_to_valid_list_of_files(tempos[t]["marks"])
             tempos[t]["marks"][j]["label_entry"]["num_files"] += diff
             self.logger.warning("Adjusting group '{}' mark '{}' num_files by +{}\n{}"
                   .format(tempos[t]["marks"][0]["label_entry"]["group"],
@@ -417,7 +417,7 @@ class LapseParser():
             self.logger.warning("Calculated number of files {} "
                                 "does not match expected count {}. Auto adjusting.".format(calc_files, count))
             diff = calc_files - count
-            j = skip_to_valid_list_of_files(tempos[t]["marks"])
+            j = self.skip_to_valid_list_of_files(tempos[t]["marks"])
             num_files -= diff
             self.logger.warning("Adjusting group '{}' mark '{}' num_files by -{}\n{}"
                   .format(tempos[t]["marks"][0]["label_entry"]["group"],
