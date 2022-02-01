@@ -64,6 +64,8 @@ class LapseParser():
                           help="output aspect ratio (width/height) in form '1.777' or '16/9'\n(default: %(default)s)")
       parser.add_argument("-t", "--tempo", default="1.0", type=float,
                           help="output tempo adjustment\n(default: %(default)s)")
+      parser.add_argument("-j", "--jump", default="0.0", type=float,
+                          help="number of seconds into file to jump before playing\n(default: %(default)s)")
       parser.add_argument("-H", "--histogram", dest="histogram", action="store_true",
                           help="stack a visual representation of the audio under the video\n(default: %(default)s)")
       parser.set_defaults(audiofile=None, histogram=False)
@@ -506,6 +508,24 @@ class LapseParser():
                         "inpoint": "{:0.6f}".format(timestamp + (i * dur)),
                         "outpoint": "{:0.6f}".format(timestamp + ((i + 1) * dur))
                         })
+    if self.jump != 0.0:
+      max_timestamp = float(timings[-2]["outpoint"])
+      if self.jump < 0.0 or self.jump >= max_timestamp:
+        raise RuntimeError("{} jump point is invalid. Must be between "
+                           "0.0 and {}".format(self.jump, max_timestamp))
+      for i, entry in enumerate(timings):
+        if "outpoint" in entry and float(entry["outpoint"]) > self.jump:
+          break;
+      new_timings = timings[i:]
+      first_entry = new_timings[0]
+      trim = float(first_entry["outpoint"]) - self.jump
+      first_entry["duration"] = "{:0.6f}".format(float(first_entry["duration"]) - trim)
+      first_entry["inpoint"] = "{:0.6f}".format(self.jump)
+      for entry in new_timings:
+        if "outpoint" in entry:
+          entry["inpoint"] = "{:0.6f}".format(float(entry["inpoint"]) - self.jump)
+          entry["outpoint"] = "{:0.6f}".format(float(entry["outpoint"]) - self.jump)
+      timings = new_timings
     #print(pformat(timings))
     self.timings = timings
 
@@ -627,6 +647,7 @@ class LapseParser():
       self.height = height
       self.width = width
       self.tempo = args.tempo
+      self.jump = args.jump
       audiofile = None
       if args.audiofile is not None:
         audiofile = args.audiofile
@@ -688,13 +709,20 @@ class LapseParser():
         cmd += "-f concat -i {} ".format(self.listfile)
         cmd += "-filter "
       cmd += "settb=1/{:0.3f},".format(self.framerate)
+      #cmd += "select=gt(t\,{}),".format(self.jump)
+      #cmd += "trim=start={},".format(self.jump)
+      #cmd += "trim=start={}:end={:0.3f},".format(self.jump, duration)
+      #cmd += "tempo={},".format(self.tempo)
+      #cmd += "trim=start={}:duration={:0.3f},".format(self.jump, duration / self.tempo)
       cmd += "setpts={:0.6f}*PTS-STARTPTS,".format(1.0 / self.tempo)
+      #cmd += "setpts={:0.6f}*PTS-STARTPTS+{}/TB,".format(1.0 / self.tempo, self.jump)
       cmd += "fps={:0.3f},".format(self.framerate)
       cmd += "scale={}:{}:force_original_aspect_ratio=decrease:eval=frame,".format(
         self.width, int(round(self.height * 2 / 3)) if args.histogram else self.height)
-      cmd += "pad=w={}:h={}:x=-1:y=-1:color=black:eval=frame,".format(
+      cmd += "pad=w={}:h={}:x=-1:y=-1:color=black:eval=frame".format(
         self.width, int(round(self.height * 2 / 3)) if args.histogram else self.height)
-      cmd += "trim=duration={:0.3f}".format(duration / self.tempo)
+      cmd += ",trim=end={:0.3f}".format((duration - self.jump) / self.tempo)
+      #cmd += ",trim=end={:0.3f}".format((duration - self.jump) / self.tempo)
       #cmd += ",format=yuv420p"
       #cmd += ",vectorscope"
       #cmd += ",zmq"
@@ -706,8 +734,15 @@ class LapseParser():
           runcmd += cmd.split()
           runcmd[-1] += ";amovie={}".format(self.audiofile)
           cmd = ""
-          #cmd += ",aselect=between(t\,100\,120)"
-          cmd += ",atempo={}".format(self.tempo)
+          #cmd += ",aselect=gt(t\,{})".format(self.jump)
+          cmd += ",atrim=start={}".format(self.jump)
+          #cmd += ",atrim=start={}:end={:0.3f}".format(self.jump, (duration - self.jump) / self.tempo)
+          if self.tempo > 2:
+            cmd += ",atempo=sqrt({0}),atempo=sqrt({0})".format(self.tempo)
+          else:
+            cmd += ",atempo={}".format(self.tempo)
+          cmd += ",asetpts=PTS-STARTPTS"
+          #cmd += ",asetpts=PTS-STARTPTS+{}/TB".format(self.jump / self.tempo)
           if args.histogram:
             cmd += ",asplit=2[out1][b];"
             #cmd += ",asplit=3[out1][a][b];"
