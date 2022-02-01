@@ -726,7 +726,7 @@ class LapseParser():
       #cmd += ",format=yuv420p"
       #cmd += ",vectorscope"
       #cmd += ",zmq"
-      #cmd += ",edgedetect"
+      #cmd += ",edgedetect=mode=colormix"
       #cmd += ",fade=in:0:100"
       if run or args.safe:
         cmd += "[vid]" if args.histogram else "[out0]"
