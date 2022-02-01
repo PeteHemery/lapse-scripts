@@ -47,6 +47,42 @@ def callShellCmd(cmd, exitOnError=True):
       if char != "":
         output += char
         if char in ["\n", "\r"]:
+          # Catch pixel format change, avoid hanging.
+          if "Format changed yuvj" in output:
+            #First line clears formatting of the terminal from aborted command
+            sys.stdout.write("""
+{}\033[00m
+WARNING:
+Encountered unsolvable problem with pixel format.
+ffconcat is expecting files that share similar properties.
+Pixel format/chroma sub-sampling format should remain constant for all groups.
+
+See this link for information about this:
+  https://matthews.sites.wfu.edu/misc/jpg_vs_gif/JpgCompTest/JpgChromaSub.html
+
+ffplay will repeat this message a lot, consume CPU as it does and cause a hang.
+Bailing out early prevents this annoying behaviour.
+
+Find the group at the time stamp above and view the metadata of the images
+(using e.g. exiftool) to examine pictures and look for
+  Y Cb Cr Sub Sampling
+Examples may include:
+  YCbCr4:4:4 (1 1)
+  YCbCr4:2:0 (2 2)
+
+Using mogrify to make the formats match pictures from the other groups:
+Modify the pictures in place:
+  mogrify -sampling-factor 4:2:0 *.jpg
+
+Or to preserve the original format, create copies in a new directory:
+  mkdir resampled
+  mogrify -path resampled -sampling-factor 4:2:0 *.jpg
+Remembering to update the group's path with "/resampled" appended.
+
+""".format(output))
+            sys.stdout.flush()
+            process.terminate()
+            raise RuntimeError("Encountered unsolvable problem with pixel format")
           # Avoid printing annoying warning, that can be ignored anyway
           if "deprecated pixel format used" not in output:
             sys.stdout.write(output)
