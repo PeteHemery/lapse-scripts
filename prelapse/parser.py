@@ -743,6 +743,7 @@ class LapseParser():
             cmd += ",atempo={}".format(self.tempo)
           cmd += ",asetpts=PTS-STARTPTS"
           #cmd += ",asetpts=PTS-STARTPTS+{}/TB".format(self.jump / self.tempo)
+          #cmd += ",asetpts={}*PTS-STARTPTS+{}/TB".format(self.tempo, self.jump / self.tempo)
           if args.histogram:
             cmd += ",asplit=2[out1][b];"
             #cmd += ",asplit=3[out1][a][b];"
