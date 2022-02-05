@@ -46,7 +46,14 @@ def setupArgParsing():
   spgen = subparsers.add_parser(
     "gen", help="generate config command",
     description="JSON group config generator.\n"
-    "TODO how to use",
+    "Run this command to search a directory tree downwards for images.\n"
+    "By default the depth of directory search is 1, meaning pictures in\n"
+    "subdirectories further down than 1 layer from the INPATH won't be\n"
+    "included in the search.\n"
+    "The output will be a json file with the images grouped together by\n"
+    "directory name. These groups can then be used in an Audacity format\n"
+    "labels file to indicate the timestamp that a group should start.\n"
+    "Explore the sub commands with -h for more details on options available.",
     formatter_class=argparse.RawTextHelpFormatter, parents=[commonArgs])
   spgen.set_defaults(cmd = "gen")
   spgen = LapseGenerator.addParserArgs(spgen)
@@ -54,7 +61,11 @@ def setupArgParsing():
   spmod = subparsers.add_parser(
     "mod", help="modify images or groups",
     description="Modify images or groups.\n"
-    "TODO how to use",
+    "Assorted commands associated with modifying images:\n"
+    " resize, scale, crop, color, rotate, stabilize\n"
+    "or groups:\n"
+    " rename, delete, new\n"
+    "Explore the sub commands with -h for more details on options available.",
     formatter_class=argparse.RawTextHelpFormatter, parents=[commonArgs])
   spmod.set_defaults(cmd = "mod")
   spmod = LapseModifier.addParserArgs(spmod, commonArgs)
@@ -62,7 +73,7 @@ def setupArgParsing():
   sprun = subparsers.add_parser(
     "play", help="preview output with ffplay command",
     description="Preview output with ffplay command.\n"
-    "TODO how to use",
+    "Explore the sub commands with -h for more details on options available.",
     formatter_class=argparse.RawTextHelpFormatter, parents=[commonArgs])
   sprun.set_defaults(cmd = "play")
   sprun = addRunnerParserArgs(sprun, run=True)
@@ -70,7 +81,7 @@ def setupArgParsing():
   spout = subparsers.add_parser(
     "enc", help="create encoded mp4 output with ffmpeg command",
     description="Create encoded mp4 output with ffmpeg command.\n"
-    "TODO how to use",
+    "Explore the sub commands with -h for more details on options available.",
     formatter_class=argparse.RawTextHelpFormatter, parents=[commonArgs])
   spout.set_defaults(cmd = "enc")
   spout = addRunnerParserArgs(spout, out=True)
@@ -78,7 +89,10 @@ def setupArgParsing():
   spinfo = subparsers.add_parser(
     "info", help="show info about groups and files",
     description="Show info about groups and files.\n"
-    "TODO how to use",
+    "Extract information about the groups and files within them\n"
+    "(e.g. number of files and file offsets into group).\n"
+    "Or show the details for a particular image file name.\n"
+    "Explore the sub commands with -h for more details on options available.",
     formatter_class=argparse.RawTextHelpFormatter, parents=[commonArgs])
   spinfo.set_defaults(cmd = "info")
   spinfo = LapseInfo.addParserArgs(spinfo)
