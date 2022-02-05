@@ -21,7 +21,6 @@ Translate Audacity labels and group configurations into ffconcat files.
 import argparse
 import json
 import logging
-import numpy as np
 import os
 import subprocess
 import sys
@@ -447,15 +446,17 @@ class LapseParser():
         duration = x["duration"] / num_files
         end_idx = int(idx+num_files)
         files = g["files"][idx:end_idx]
-        goal_files = int(round(x["duration"]  * self.framerate))
+        goal_files = int(round(x["duration"] * self.framerate))
         goal_duration = x["duration"] / goal_files
         if num_files > goal_files:
-          # Reduce the number files and durations of groups that have more than the specified framerate.
-
-          # Select N number of files evenly spaced from existing list of files.
-          arr = np.array(files)
-          filtered_idx = np.round(np.linspace(0, len(arr) - 1, goal_files)).astype(int)
-          files = [x for x in arr[filtered_idx]]
+          # Reduce the number files and durations for groups that contain more files than the specified framerate.
+          # Algorithm for reducing a selection of files with linear spacing:
+          #start = 0
+          #stop = len(files) - 1
+          #num = goal_files
+          #step = float(stop - start) / float(num - 1)
+          #files = [files[round(x * step)] for x in range(num)]
+          files = [files[round(x * float(len(files) - 1) / float(goal_files - 1))] for x in range(goal_files)]
           new_num_files = len(files)
           new_duration = x["duration"]  / new_num_files
           self.logger.info("Processing '{}'\ntimestamp {} duration {}\n"
