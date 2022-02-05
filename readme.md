@@ -93,8 +93,6 @@ With the JSON config file and Audacity labels file, the parser script can determ
 the effects requested to the file lists and generate an output file that FFmpeg/FFplay can read to concatenate
 images together into a video.
 
-NOTE: The parser requires numpy.
-
 ```bash
 $ pip install -r requirements.txt
 ```
