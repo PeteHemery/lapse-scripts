@@ -565,6 +565,7 @@ class LapseModifier():
         self.logger.info("parsed new")
       elif args.modgrp == "fixunsafe":
         print("parsed fixunsafe")
+        print("NO ACTION PERFORMED!")
     else:
       raise RuntimeError("Unknown mod command")
 
