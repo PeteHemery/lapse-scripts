@@ -28,7 +28,10 @@ def addRunnerParserArgs(parser, run=False, out=False):
   return parser
 
 
-def callShellCmd(cmd, exitOnError=True):
+def callShellCmd(cmd, exitOnError=True, dryrun=False):
+  if dryrun:
+    print("Dry run, not executing command:\n{}".format(" ".join(cmd)))
+    return 0
   try:
     if cmd[0] in ["ffmpeg", "ffplay"]:
       os.environ["AV_LOG_FORCE_COLOR"] = "1" # Force colored output while piping stderr
@@ -109,6 +112,6 @@ Remembering to update the group's path with "/resampled" appended.
 
 def runner(args, run=False, out=False):
   parser = LapseParser()
-  callShellCmd(parser.runParser(args, run=run, out=out))
+  callShellCmd(parser.runParser(args, run=run, out=out), dryrun=args.dryrun)
   if out:
     print("Written '{}'".format(parser.outpath))
