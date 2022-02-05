@@ -368,11 +368,7 @@ class LapseParser():
       tempos[t]["scaled_duration_ratio"] = tempos[t]["scaled_duration"] / scaled_duration
       # Handle an odd number of files with an equal ratio
       tmp = count_without_holds * tempos[t]["scaled_duration_ratio"]
-      if h == 0 and count_without_holds % 2 == 1:
-        self.logger.info("Using ceiling for files_ratio {} for odd num_files: {}".format(tmp, count_without_holds))
-        files_ratio = int(ceil(tmp))
-      else:
-        files_ratio = int(round(tmp))
+      files_ratio = int(round(tmp + 0.5))
       files_ratio_total += files_ratio
       if files_ratio_total > count_without_holds:
         files_ratio -= files_ratio_total - count_without_holds
