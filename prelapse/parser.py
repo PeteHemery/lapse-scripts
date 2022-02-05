@@ -638,8 +638,8 @@ class LapseParser():
       height = ceil(round(args.width / aspectratio) / 2) * 2 # Round height to power of 2
       width = ceil(round(height * aspectratio) / 2) * 2 # Recalculate the width
       if width != args.width:
-        raise RuntimeError("Width recalculation failed: {} != {}\n"
-                           "Try adjusting width or aspect ratio.".format(args.width, width))
+        self.logger.warning("Recalculated width does not match requested width: {} != {}\n"
+                            "Aspect ratio: {}, WxH: {}x{}".format(args.width, width, aspectratio, width, height))
       self.aspectratio = aspectratio
       self.height = height
       self.width = width
