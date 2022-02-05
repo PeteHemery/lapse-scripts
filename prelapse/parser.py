@@ -354,13 +354,13 @@ class LapseParser():
       count_without_holds -= tempos[t]["holds"]
       tempos[t]["scaled_duration"] = tempos[t]["play_duration"] * t
       scaled_duration += tempos[t]["scaled_duration"]
-      self.logger.info("tempo: {}\nplay duration ratio: {} scaled duration: {}"
+      self.logger.info("tempo: {}\nplay duration ratio: {:.06f} scaled duration: {:.06f}"
             .format(t, tempos[t]["play_duration"], tempos[t]["scaled_duration"]))
     self.logger.info("count: {}  count_without_holds: {}".format(count, count_without_holds))
     scale_ratio = play_duration / scaled_duration
-    self.logger.info("scaled_duration pre adjust: {}\nscale_ratio {}".format(scaled_duration, scale_ratio))
+    self.logger.info("scaled_duration pre adjust: {:.06f}\nscale_ratio {:.06f}".format(scaled_duration, scale_ratio))
     scaled_duration *= scale_ratio
-    self.logger.info("scaled_duration: {}".format(scaled_duration))
+    self.logger.info("scaled_duration: {:.06f}".format(scaled_duration))
     calc_files = 0
     files_ratio_total = 0
     for h, t in enumerate(tempos):
@@ -376,7 +376,7 @@ class LapseParser():
       files_ratio_total += files_ratio
       if files_ratio_total > count_without_holds:
         files_ratio -= files_ratio_total - count_without_holds
-      self.logger.info("tempo: {}\nscaled duration ratio: {} scaled duration: {}"
+      self.logger.info("tempo: {}\nscaled duration ratio: {:.06f} scaled duration: {:.06f}"
             .format(t, tempos[t]["scaled_duration_ratio"], tempos[t]["scaled_duration"]))
       self.logger.info("files ratio: {}".format(files_ratio))
       tempo_file_count = 0
