@@ -166,23 +166,23 @@ file 'b/IMG_0000.jpg'
 
 NOTE: The last image is displayed after the end to ensure there is a correct key frame present.
 
-NOTE: Default aspect ratio set as 16/9.
+NOTE: Default aspect ratio set as 4/3.
 
 Phase 3 involves running FFmpeg or FFplay using the generated list file.
 
-Running the following will use FFmpeg produce a video file in 4/3 aspect ratio,
+Running the following will use FFmpeg produce a video file in 16/9 aspect ratio,
 width 640 pixels, height 480 pixels, in H265 format.
 
 The height is calculated by the *width / aspect ratio*.
 
 ```bash
-$ python lapse-run.py -l list.txt -w 640 -x 4/3 -o test.mp4
+$ python lapse-run.py -l list.txt -w 640 -x 16/9 -o test.mp4
 ```
 
 Changing the command slightly, we can preview the output before encoding it, and attach an audio file with it:
 
 ```bash
-$ python lapse-run.py -l list.txt -w 640 -x 4/3 -a test.m4a -p
+$ python lapse-run.py -l list.txt -w 640 -x 16/9 -a test.m4a -p
 ```
 
 NOTE: If the video file already exists, previewing will fail without adding the -y flag,

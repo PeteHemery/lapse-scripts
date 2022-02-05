@@ -59,7 +59,7 @@ class LapseParser():
                           help="output file frame rate\n(default: %(default)s)")
       parser.add_argument("-w", "--width", default="1280", type=int,
                           help="output scaled width in pixels\n(default: %(default)s)")
-      parser.add_argument("-x", "--aspectratio", default="16/9", type=str,
+      parser.add_argument("-x", "--aspectratio", default="4/3", type=str,
                           help="output aspect ratio (width/height) in form '1.777' or '16/9'\n(default: %(default)s)")
       parser.add_argument("-t", "--tempo", default="1.0", type=float,
                           help="output tempo adjustment\n(default: %(default)s)")
