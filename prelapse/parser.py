@@ -778,6 +778,5 @@ class LapseParser():
     else:
       self.logger.warning("Parsed only")
       cmd = []
-    print("Running command\n {}".format(" ".join(cmd)))
     return cmd
 
